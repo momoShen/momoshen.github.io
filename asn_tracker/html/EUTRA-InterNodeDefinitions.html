@@ -1,0 +1,605 @@
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script><pre class='prettyprint'><span class="nocode">-- 3GPP TS 36.331 V16.1.1 (2020-07)</span>
+<span class="nocode">--</span>
+<span id="id_EUTRA-InterNodeDefinitions">EUTRA-InterNodeDefinitions</span> DEFINITIONS AUTOMATIC TAGS ::=
+
+BEGIN
+
+IMPORTS
+	AntennaInfoCommon,
+	AntennaInfoDedicated-v10i0,
+	ARFCN-ValueEUTRA,
+	ARFCN-ValueEUTRA-v9e0,
+	ARFCN-ValueEUTRA-r9,
+	CellIdentity,
+	C-RNTI,
+	DL-DCCH-Message,
+	DRB-Identity,
+	DRB-ToReleaseList,
+	DRB-ToReleaseList-r15,
+	FreqBandIndicator-r11,
+	InDeviceCoexIndication-r11,
+	LWA-Config-r13,
+	MasterInformationBlock,
+	maxBands,
+	maxFreq,
+	maxDRB,
+	maxDRBExt-r15,
+	maxDRB-r15,
+	maxSCell-r10,
+	maxSCell-r13,
+	maxServCell-r10,
+	maxServCell-r13,
+	MBMSInterestIndication-r11,
+	MeasConfig,
+	MeasGapConfig,
+	MeasGapConfigPerCC-List-r14,
+	MeasResultForRSSI-r13,
+	MeasResultListWLAN-r13,
+	OtherConfig-r9,
+	PhysCellId,
+	P-Max,
+	PowerCoordinationInfo-r12,
+	SidelinkUEInformation-r12,
+	SL-CommConfig-r12,
+	SL-DiscConfig-r12,
+	SubframeAssignment-r15,
+	RadioResourceConfigDedicated,
+	RadioResourceConfigDedicated-v13c0,
+	RadioResourceConfigDedicated-v1370,
+	RAN-NotificationAreaInfo-r15,
+	RCLWI-Configuration-r13,
+	RSRP-Range,
+	RSRQ-Range,
+	RSRQ-Range-v1250,
+	RS-SINR-Range-r13,
+	SCellToAddModList-r10,
+	SCellToAddModList-v13c0,
+	SCellToAddModListExt-r13,
+	SCellToAddModListExt-v13c0,
+	SCG-ConfigPartSCG-r12,
+	SCG-ConfigPartSCG-v12f0,
+	SCG-ConfigPartSCG-v13c0,
+	SecurityAlgorithmConfig,
+	SCellIndex-r10,
+	SCellIndex-r13,
+	SCellToReleaseList-r10,
+	SCellToReleaseListExt-r13,
+	ServCellIndex-r10,
+	ServCellIndex-r13,
+	ShortMAC-I,
+	MeasResultServFreqListNR-r15,
+	MeasResultSSTD-r13,
+	SL-V2X-ConfigDedicated-r14,
+	SystemInformationBlockType1,
+	SystemInformationBlockType1-v890-IEs,
+	SystemInformationBlockType2,
+	UEAssistanceInformation-r11,
+	UECapabilityInformation,
+	UE-CapabilityRAT-ContainerList,
+	UE-RadioPagingInfo-r12,
+	WLANConnectionStatusReport-r13,
+	WLAN-OffloadConfig-r12
+FROM EUTRA-RRC-Definitions;
+
+
+<span id="id_HandoverCommand">HandoverCommand</span> ::=					SEQUENCE {
+	criticalExtensions					CHOICE {
+		c1									CHOICE{
+			handoverCommand-r8					<a href="#id_HandoverCommand-r8-IEs">HandoverCommand-r8-IEs</a>,
+			spare7 NULL,
+			spare6 NULL, spare5 NULL, spare4 NULL,
+			spare3 NULL, spare2 NULL, spare1 NULL
+		},
+		criticalExtensionsFuture			SEQUENCE {}
+	}
+}
+
+<span id="id_HandoverCommand-r8-IEs">HandoverCommand-r8-IEs</span> ::=			SEQUENCE {
+	handoverCommandMessage				OCTET STRING (CONTAINING DL-DCCH-Message),
+	nonCriticalExtension				SEQUENCE {}							OPTIONAL
+}
+
+
+<span id="id_HandoverPreparationInformation">HandoverPreparationInformation</span> ::=	SEQUENCE {
+	criticalExtensions					CHOICE {
+		c1									CHOICE{
+			handoverPreparationInformation-r8	<a href="#id_HandoverPreparationInformation-r8-IEs">HandoverPreparationInformation-r8-IEs</a>,
+			spare7 NULL,
+			spare6 NULL, spare5 NULL, spare4 NULL,
+			spare3 NULL, spare2 NULL, spare1 NULL
+		},
+		criticalExtensionsFuture			SEQUENCE {}
+	}
+}
+
+<span id="id_HandoverPreparationInformation-r8-IEs">HandoverPreparationInformation-r8-IEs</span> ::= SEQUENCE {
+	ue-RadioAccessCapabilityInfo		UE-CapabilityRAT-ContainerList,
+	as-Config							<a href="#id_AS-Config">AS-Config</a>					OPTIONAL,		<span class="nocode">-- Cond HO</span>
+	rrm-Config							<a href="#id_RRM-Config">RRM-Config</a>					OPTIONAL,
+	as-Context							<a href="#id_AS-Context">AS-Context</a>				OPTIONAL,		<span class="nocode">-- Cond HO</span>
+	nonCriticalExtension				<a href="#id_HandoverPreparationInformation-v920-IEs">HandoverPreparationInformation-v920-IEs</a>		OPTIONAL
+}
+
+<span id="id_HandoverPreparationInformation-v920-IEs">HandoverPreparationInformation-v920-IEs</span>	::= SEQUENCE {
+	ue-ConfigRelease-r9					ENUMERATED {
+										rel9, rel10, rel11, rel12, v10j0, v11e0,
+										v1280, rel13, ..., rel14, rel15, rel16}		OPTIONAL,	<span class="nocode">-- Cond HO2</span>
+	nonCriticalExtension				<a href="#id_HandoverPreparationInformation-v9d0-IEs">HandoverPreparationInformation-v9d0-IEs</a>		OPTIONAL
+}
+
+<span id="id_HandoverPreparationInformation-v9d0-IEs">HandoverPreparationInformation-v9d0-IEs</span>	::= SEQUENCE {
+	lateNonCriticalExtension			OCTET STRING (CONTAINING HandoverPreparationInformation-v9j0-IEs)	OPTIONAL,
+	nonCriticalExtension				<a href="#id_HandoverPreparationInformation-v9e0-IEs">HandoverPreparationInformation-v9e0-IEs</a>			OPTIONAL
+}
+
+<span class="nocode">-- Late non-critical extensions:</span>
+<span id="id_HandoverPreparationInformation-v9j0-IEs">HandoverPreparationInformation-v9j0-IEs</span> ::= SEQUENCE {
+	<span class="nocode">-- Following field is only for pre REL-10 late non-critical extensions</span>
+	lateNonCriticalExtension			OCTET STRING					OPTIONAL,
+	nonCriticalExtension				<a href="#id_HandoverPreparationInformation-v10j0-IEs">HandoverPreparationInformation-v10j0-IEs</a>		OPTIONAL
+}
+
+<span id="id_HandoverPreparationInformation-v10j0-IEs">HandoverPreparationInformation-v10j0-IEs</span> ::= SEQUENCE {
+	as-Config-v10j0						<a href="#id_AS-Config-v10j0">AS-Config-v10j0</a>			OPTIONAL,
+	nonCriticalExtension				<a href="#id_HandoverPreparationInformation-v10x0-IEs">HandoverPreparationInformation-v10x0-IEs</a>		OPTIONAL
+}
+
+<span id="id_HandoverPreparationInformation-v10x0-IEs">HandoverPreparationInformation-v10x0-IEs</span> ::= SEQUENCE {
+	<span class="nocode">-- Following field is only for late non-critical extensions from REL-10 to REL-12</span>
+	lateNonCriticalExtension			OCTET STRING					OPTIONAL,
+	nonCriticalExtension				<a href="#id_HandoverPreparationInformation-v13c0-IEs">HandoverPreparationInformation-v13c0-IEs</a>		OPTIONAL
+}
+
+<span id="id_HandoverPreparationInformation-v13c0-IEs">HandoverPreparationInformation-v13c0-IEs</span> ::= SEQUENCE {
+	as-Config-v13c0						<a href="#id_AS-Config-v13c0">AS-Config-v13c0</a>			OPTIONAL,
+	<span class="nocode">-- Following field is only for late non-critical extensions from REL-13</span>
+	nonCriticalExtension				SEQUENCE {}					OPTIONAL
+}
+
+<span class="nocode">-- Regular non-critical extensions:</span>
+<span id="id_HandoverPreparationInformation-v9e0-IEs">HandoverPreparationInformation-v9e0-IEs</span>	::= SEQUENCE {
+	as-Config-v9e0						<a href="#id_AS-Config-v9e0">AS-Config-v9e0</a>					OPTIONAL,	<span class="nocode">-- Cond HO2</span>
+	nonCriticalExtension				<a href="#id_HandoverPreparationInformation-v1130-IEs">HandoverPreparationInformation-v1130-IEs</a>		OPTIONAL
+}
+
+<span id="id_HandoverPreparationInformation-v1130-IEs">HandoverPreparationInformation-v1130-IEs</span>	::= SEQUENCE {
+	as-Context-v1130					<a href="#id_AS-Context-v1130">AS-Context-v1130</a>				OPTIONAL,	<span class="nocode">-- Cond HO2</span>
+	nonCriticalExtension				<a href="#id_HandoverPreparationInformation-v1250-IEs">HandoverPreparationInformation-v1250-IEs</a>						OPTIONAL
+}
+
+<span id="id_HandoverPreparationInformation-v1250-IEs">HandoverPreparationInformation-v1250-IEs</span> ::= SEQUENCE {
+	ue-SupportedEARFCN-r12				ARFCN-ValueEUTRA-r9				OPTIONAL,	<span class="nocode">-- Cond HO3</span>
+	as-Config-v1250					<a href="#id_AS-Config-v1250">AS-Config-v1250</a>				OPTIONAL,	<span class="nocode">-- Cond HO2</span>
+	nonCriticalExtension				<a href="#id_HandoverPreparationInformation-v1320-IEs">HandoverPreparationInformation-v1320-IEs</a>						OPTIONAL
+}
+
+<span id="id_HandoverPreparationInformation-v1320-IEs">HandoverPreparationInformation-v1320-IEs</span> ::= SEQUENCE {
+	as-Config-v1320						<a href="#id_AS-Config-v1320">AS-Config-v1320</a>					OPTIONAL,	<span class="nocode">-- Cond HO2</span>
+	as-Context-v1320					<a href="#id_AS-Context-v1320">AS-Context-v1320</a>				OPTIONAL,	<span class="nocode">-- Cond HO2</span>
+	nonCriticalExtension				<a href="#id_HandoverPreparationInformation-v1430-IEs">HandoverPreparationInformation-v1430-IEs</a>						OPTIONAL
+}
+
+<span id="id_HandoverPreparationInformation-v1430-IEs">HandoverPreparationInformation-v1430-IEs</span> ::= SEQUENCE {
+	as-Config-v1430					<a href="#id_AS-Config-v1430">AS-Config-v1430</a>						OPTIONAL,	<span class="nocode">-- Cond HO2</span>
+	makeBeforeBreakReq-r14			ENUMERATED {true}				OPTIONAL,	<span class="nocode">-- Cond HO2</span>
+	nonCriticalExtension			<a href="#id_HandoverPreparationInformation-v1530-IEs">HandoverPreparationInformation-v1530-IEs</a>			OPTIONAL
+}
+
+<span id="id_HandoverPreparationInformation-v1530-IEs">HandoverPreparationInformation-v1530-IEs</span> ::= SEQUENCE {
+	ran-NotificationAreaInfo-r15		RAN-NotificationAreaInfo-r15			OPTIONAL,
+	nonCriticalExtension				<a href="#id_HandoverPreparationInformation-v1540-IEs">HandoverPreparationInformation-v1540-IEs</a>							OPTIONAL
+}
+
+<span id="id_HandoverPreparationInformation-v1540-IEs">HandoverPreparationInformation-v1540-IEs</span> ::= SEQUENCE {
+	sourceRB-ConfigIntra5GC-r15		OCTET STRING						OPTIONAL,	<span class="nocode">--Cond HO4</span>
+	nonCriticalExtension				<a href="#id_HandoverPreparationInformation-v1610-IEs">HandoverPreparationInformation-v1610-IEs</a>	OPTIONAL
+}
+
+<span id="id_HandoverPreparationInformation-v1610-IEs">HandoverPreparationInformation-v1610-IEs</span> ::= SEQUENCE {
+	as-Context-v1610			<a href="#id_AS-Context-v1610">AS-Context-v1610</a>						OPTIONAL,	<span class="nocode">--Cond HO5</span>
+	nonCriticalExtension		SEQUENCE {}								OPTIONAL
+}
+
+
+<span id="id_SCG-Config-r12">SCG-Config-r12</span> ::=					SEQUENCE {
+	criticalExtensions					CHOICE {
+		c1									CHOICE{
+			scg-Config-r12					<a href="#id_SCG-Config-r12-IEs">SCG-Config-r12-IEs</a>,
+			spare7 NULL,
+			spare6 NULL, spare5 NULL, spare4 NULL,
+			spare3 NULL, spare2 NULL, spare1 NULL
+		},
+		criticalExtensionsFuture			SEQUENCE {}
+	}
+}
+
+<span id="id_SCG-Config-r12-IEs">SCG-Config-r12-IEs</span> ::=				SEQUENCE {
+	scg-RadioConfig-r12					SCG-ConfigPartSCG-r12				OPTIONAL,
+	nonCriticalExtension					<a href="#id_SCG-Config-v12i0a-IEs">SCG-Config-v12i0a-IEs</a>				OPTIONAL
+}
+
+<span id="id_SCG-Config-v12i0a-IEs">SCG-Config-v12i0a-IEs</span> ::=				SEQUENCE {
+	<span class="nocode">-- Following field is only for late non-critical extensions from REL-12</span>
+	lateNonCriticalExtension			OCTET STRING (CONTAINING SCG-Config-v12i0b-IEs)	OPTIONAL,
+	nonCriticalExtension				<a href="#id_SCG-Config-v13c0-IEs">SCG-Config-v13c0-IEs</a>				OPTIONAL
+}
+
+<span id="id_SCG-Config-v12i0b-IEs">SCG-Config-v12i0b-IEs</span> ::=				SEQUENCE {
+	scg-RadioConfig-v12i0				SCG-ConfigPartSCG-v12f0			OPTIONAL,	<span class="nocode">-- Need ON</span>
+	nonCriticalExtension				SEQUENCE {}						OPTIONAL
+}
+
+<span id="id_SCG-Config-v13c0-IEs">SCG-Config-v13c0-IEs</span> ::=				SEQUENCE {
+	scg-RadioConfig-v13c0				SCG-ConfigPartSCG-v13c0				OPTIONAL,
+	<span class="nocode">-- Following field is only for late non-critical extensions from REL-13 onwards</span>
+	nonCriticalExtension				SEQUENCE {}							OPTIONAL
+}
+
+
+<span id="id_SCG-ConfigInfo-r12">SCG-ConfigInfo-r12</span> ::=					SEQUENCE {
+	criticalExtensions					CHOICE {
+		c1									CHOICE{
+			scg-ConfigInfo-r12					<a href="#id_SCG-ConfigInfo-r12-IEs">SCG-ConfigInfo-r12-IEs</a>,
+			spare7 NULL,
+			spare6 NULL, spare5 NULL, spare4 NULL,
+			spare3 NULL, spare2 NULL, spare1 NULL
+		},
+		criticalExtensionsFuture			SEQUENCE {}
+	}
+}
+
+<span id="id_SCG-ConfigInfo-r12-IEs">SCG-ConfigInfo-r12-IEs</span> ::=			SEQUENCE {
+	radioResourceConfigDedMCG-r12	RadioResourceConfigDedicated		OPTIONAL,
+	sCellToAddModListMCG-r12		SCellToAddModList-r10				OPTIONAL,
+	measGapConfig-r12				MeasGapConfig						OPTIONAL,
+	powerCoordinationInfo-r12		PowerCoordinationInfo-r12			OPTIONAL,
+	scg-RadioConfig-r12				SCG-ConfigPartSCG-r12				OPTIONAL,
+	eutra-CapabilityInfo-r12		OCTET STRING (CONTAINING UECapabilityInformation)	OPTIONAL,
+	scg-ConfigRestrictInfo-r12		<a href="#id_SCG-ConfigRestrictInfo-r12">SCG-ConfigRestrictInfo-r12</a>			OPTIONAL,
+	mbmsInterestIndication-r12		OCTET STRING (CONTAINING
+										MBMSInterestIndication-r11)		OPTIONAL,
+	measResultServCellListSCG-r12	<a href="#id_MeasResultServCellListSCG-r12">MeasResultServCellListSCG-r12</a>		OPTIONAL,
+	drb-ToAddModListSCG-r12			<a href="#id_DRB-InfoListSCG-r12">DRB-InfoListSCG-r12</a>					OPTIONAL,
+	drb-ToReleaseListSCG-r12		DRB-ToReleaseList					OPTIONAL,
+	sCellToAddModListSCG-r12		<a href="#id_SCellToAddModListSCG-r12">SCellToAddModListSCG-r12</a>			OPTIONAL,
+	sCellToReleaseListSCG-r12		SCellToReleaseList-r10				OPTIONAL,
+	p-Max-r12							P-Max								OPTIONAL,
+	nonCriticalExtension			<a href="#id_SCG-ConfigInfo-v1310-IEs">SCG-ConfigInfo-v1310-IEs</a>			OPTIONAL
+}
+
+<span id="id_SCG-ConfigInfo-v1310-IEs">SCG-ConfigInfo-v1310-IEs</span> ::=		SEQUENCE {
+	measResultSSTD-r13				MeasResultSSTD-r13					OPTIONAL,
+	sCellToAddModListMCG-Ext-r13		SCellToAddModListExt-r13			OPTIONAL,
+	measResultServCellListSCG-Ext-r13	<a href="#id_MeasResultServCellListSCG-Ext-r13">MeasResultServCellListSCG-Ext-r13</a>	OPTIONAL,
+	sCellToAddModListSCG-Ext-r13		<a href="#id_SCellToAddModListSCG-Ext-r13">SCellToAddModListSCG-Ext-r13</a>			OPTIONAL,
+	sCellToReleaseListSCG-Ext-r13	SCellToReleaseListExt-r13			OPTIONAL,
+	nonCriticalExtension			<a href="#id_SCG-ConfigInfo-v1330-IEs">SCG-ConfigInfo-v1330-IEs</a>			OPTIONAL
+}
+
+<span id="id_SCG-ConfigInfo-v1330-IEs">SCG-ConfigInfo-v1330-IEs</span> ::=		SEQUENCE {
+	measResultListRSSI-SCG-r13		<a href="#id_MeasResultListRSSI-SCG-r13">MeasResultListRSSI-SCG-r13</a>			OPTIONAL,
+	nonCriticalExtension			<a href="#id_SCG-ConfigInfo-v1430-IEs">SCG-ConfigInfo-v1430-IEs</a>							OPTIONAL
+}
+
+<span id="id_SCG-ConfigInfo-v1430-IEs">SCG-ConfigInfo-v1430-IEs</span> ::=		SEQUENCE {
+	makeBeforeBreakSCG-Req-r14		ENUMERATED {true}					OPTIONAL,
+	measGapConfigPerCC-List		MeasGapConfigPerCC-List-r14			OPTIONAL,
+	nonCriticalExtension			<a href="#id_SCG-ConfigInfo-v1530-IEs">SCG-ConfigInfo-v1530-IEs</a>					OPTIONAL
+}
+
+<span id="id_SCG-ConfigInfo-v1530-IEs">SCG-ConfigInfo-v1530-IEs</span> ::=		SEQUENCE {
+	drb-ToAddModListSCG-r15			<a href="#id_DRB-InfoListSCG-r15">DRB-InfoListSCG-r15</a>					OPTIONAL,
+	drb-ToReleaseListSCG-r15		DRB-ToReleaseList-r15				OPTIONAL,
+	nonCriticalExtension			SEQUENCE {}							OPTIONAL
+}
+
+<span id="id_DRB-InfoListSCG-r12">DRB-InfoListSCG-r12</span> ::=				SEQUENCE (SIZE (1..maxDRB)) OF <a href="#id_DRB-InfoSCG-r12">DRB-InfoSCG-r12</a>
+<span id="id_DRB-InfoListSCG-r15">DRB-InfoListSCG-r15</span> ::=				SEQUENCE (SIZE (1..maxDRB-r15)) OF <a href="#id_DRB-InfoSCG-r12">DRB-InfoSCG-r12</a>
+
+<span id="id_DRB-InfoSCG-r12">DRB-InfoSCG-r12</span> ::=				SEQUENCE {
+	eps-BearerIdentity-r12			INTEGER (0..15)				OPTIONAL,	<span class="nocode">-- Cond DRB-Setup</span>
+	drb-Identity-r12				DRB-Identity,
+	drb-Type-r12					ENUMERATED {split, scg}		OPTIONAL,	<span class="nocode">-- Cond DRB-Setup</span>
+	...
+}
+
+<span id="id_SCellToAddModListSCG-r12">SCellToAddModListSCG-r12</span> ::=	SEQUENCE (SIZE (1..maxSCell-r10)) OF <a href="#id_Cell-ToAddMod-r12">Cell-ToAddMod-r12</a>
+
+<span id="id_SCellToAddModListSCG-Ext-r13">SCellToAddModListSCG-Ext-r13</span> ::=	SEQUENCE (SIZE (1..maxSCell-r13)) OF <a href="#id_Cell-ToAddMod-r12">Cell-ToAddMod-r12</a>
+
+<span id="id_Cell-ToAddMod-r12">Cell-ToAddMod-r12</span> ::=				SEQUENCE {
+	sCellIndex-r12						SCellIndex-r10,
+	cellIdentification-r12				SEQUENCE {
+		physCellId-r12						PhysCellId,
+		dl-CarrierFreq-r12					ARFCN-ValueEUTRA-r9
+	}																OPTIONAL,	<span class="nocode">-- Cond SCellAdd</span>
+	measResultCellToAdd-r12				SEQUENCE {
+		rsrpResult-r12						RSRP-Range,
+		rsrqResult-r12						RSRQ-Range
+	}																OPTIONAL,	<span class="nocode">-- Cond SCellAdd2</span>
+	...,
+	[[		sCellIndex-r13					SCellIndex-r13				OPTIONAL,
+		measResultCellToAdd-v1310			SEQUENCE {
+			rs-sinr-Result-r13					RS-SINR-Range-r13
+		}															OPTIONAL	<span class="nocode">-- Cond SCellAdd2</span>
+	]]
+}
+
+<span id="id_MeasResultServCellListSCG-r12">MeasResultServCellListSCG-r12</span> ::=	SEQUENCE (SIZE (1..maxServCell-r10)) OF <a href="#id_MeasResultServCellSCG-r12">MeasResultServCellSCG-r12</a>
+
+<span id="id_MeasResultServCellListSCG-Ext-r13">MeasResultServCellListSCG-Ext-r13</span> ::=	SEQUENCE (SIZE (1..maxServCell-r13)) OF <a href="#id_MeasResultServCellSCG-r12">MeasResultServCellSCG-r12</a>
+
+<span id="id_MeasResultServCellSCG-r12">MeasResultServCellSCG-r12</span> ::=			SEQUENCE {
+	servCellId-r12						ServCellIndex-r10,
+	measResultSCell-r12					SEQUENCE {
+		rsrpResultSCell-r12					RSRP-Range,
+		rsrqResultSCell-r12					RSRQ-Range
+	},
+	...,
+	[[		servCellId-r13						ServCellIndex-r13		OPTIONAL,
+		measResultSCell-v1310				SEQUENCE {
+			rs-sinr-ResultSCell-r13				RS-SINR-Range-r13
+		}															OPTIONAL
+	]]
+}
+
+<span id="id_MeasResultListRSSI-SCG-r13">MeasResultListRSSI-SCG-r13</span> ::=	SEQUENCE (SIZE (1..maxServCell-r13)) OF <a href="#id_MeasResultRSSI-SCG-r13">MeasResultRSSI-SCG-r13</a>
+
+<span id="id_MeasResultRSSI-SCG-r13">MeasResultRSSI-SCG-r13</span> ::=			SEQUENCE {
+	servCellId-r13						ServCellIndex-r13,
+	measResultForRSSI-r13				MeasResultForRSSI-r13
+}
+
+<span id="id_SCG-ConfigRestrictInfo-r12">SCG-ConfigRestrictInfo-r12</span> ::=		SEQUENCE {
+	maxSCH-TB-BitsDL-r12				INTEGER (1..100),
+	maxSCH-TB-BitsUL-r12				INTEGER (1..100)
+}
+
+
+<span id="id_UEPagingCoverageInformation">UEPagingCoverageInformation</span> ::= SEQUENCE {
+	criticalExtensions					CHOICE {
+		c1									CHOICE{
+			uePagingCoverageInformation-r13			<a href="#id_UEPagingCoverageInformation-r13-IEs">UEPagingCoverageInformation-r13-IEs</a>,
+			spare7 NULL,
+			spare6 NULL, spare5 NULL, spare4 NULL,
+			spare3 NULL, spare2 NULL, spare1 NULL
+		},
+		criticalExtensionsFuture			SEQUENCE {}
+	}
+}
+
+<span id="id_UEPagingCoverageInformation-r13-IEs">UEPagingCoverageInformation-r13-IEs</span> ::= SEQUENCE {
+	mpdcch-NumRepetition-r13				INTEGER (1..256)	OPTIONAL,
+	nonCriticalExtension					SEQUENCE {}		OPTIONAL
+}
+
+
+<span id="id_UERadioAccessCapabilityInformation">UERadioAccessCapabilityInformation</span> ::= SEQUENCE {
+	criticalExtensions					CHOICE {
+		c1									CHOICE{
+			ueRadioAccessCapabilityInformation-r8
+												<a href="#id_UERadioAccessCapabilityInformation-r8-IEs">UERadioAccessCapabilityInformation-r8-IEs</a>,
+			spare7 NULL,
+			spare6 NULL, spare5 NULL, spare4 NULL,
+			spare3 NULL, spare2 NULL, spare1 NULL
+		},
+		criticalExtensionsFuture			SEQUENCE {}
+	}
+}
+
+<span id="id_UERadioAccessCapabilityInformation-r8-IEs">UERadioAccessCapabilityInformation-r8-IEs</span> ::= SEQUENCE {
+	ue-RadioAccessCapabilityInfo		OCTET STRING (CONTAINING UECapabilityInformation),
+	nonCriticalExtension				SEQUENCE {}							OPTIONAL
+}
+
+
+<span id="id_UERadioPagingInformation">UERadioPagingInformation</span> ::= SEQUENCE {
+	criticalExtensions					CHOICE {
+		c1									CHOICE{
+			ueRadioPagingInformation-r12			<a href="#id_UERadioPagingInformation-r12-IEs">UERadioPagingInformation-r12-IEs</a>,
+			spare7 NULL,
+			spare6 NULL, spare5 NULL, spare4 NULL,
+			spare3 NULL, spare2 NULL, spare1 NULL
+		},
+		criticalExtensionsFuture			SEQUENCE {}
+	}
+}
+
+<span id="id_UERadioPagingInformation-r12-IEs">UERadioPagingInformation-r12-IEs</span> ::= SEQUENCE {
+	ue-RadioPagingInfo-r12				OCTET STRING (CONTAINING UE-RadioPagingInfo-r12),
+	nonCriticalExtension				<a href="#id_UERadioPagingInformation-v1310-IEs">UERadioPagingInformation-v1310-IEs</a>			OPTIONAL
+}
+
+<span id="id_UERadioPagingInformation-v1310-IEs">UERadioPagingInformation-v1310-IEs</span> ::= SEQUENCE {
+	supportedBandListEUTRAForPaging-r13		SEQUENCE (SIZE (1..maxBands)) OF FreqBandIndicator-r11 OPTIONAL,
+	nonCriticalExtension					<a href="#id_UERadioPagingInformation-v1610-IEs">UERadioPagingInformation-v1610-IEs</a>		OPTIONAL
+
+}
+
+<span id="id_UERadioPagingInformation-v1610-IEs">UERadioPagingInformation-v1610-IEs</span> ::= SEQUENCE {
+	accessStratumRelease-r16				ENUMERATED {true}						OPTIONAL,
+	nonCriticalExtension					SEQUENCE {}								OPTIONAL
+}
+
+
+<span id="id_AS-Config">AS-Config</span> ::=				SEQUENCE {
+	sourceMeasConfig					MeasConfig,
+	sourceRadioResourceConfig			RadioResourceConfigDedicated,
+	sourceSecurityAlgorithmConfig		SecurityAlgorithmConfig,
+	sourceUE-Identity					C-RNTI,
+	sourceMasterInformationBlock		MasterInformationBlock,
+	sourceSystemInformationBlockType1	SystemInformationBlockType1(WITH COMPONENTS
+											{..., nonCriticalExtension ABSENT}),
+	sourceSystemInformationBlockType2	SystemInformationBlockType2,
+	antennaInfoCommon					AntennaInfoCommon,
+	sourceDl-CarrierFreq				ARFCN-ValueEUTRA,
+	...,
+	[[	sourceSystemInformationBlockType1Ext	OCTET STRING (CONTAINING
+												SystemInformationBlockType1-v890-IEs)	OPTIONAL,
+		sourceOtherConfig-r9				OtherConfig-r9
+	<span class="nocode">-- sourceOtherConfig-r9 should have been optional. A target eNB compliant with this transfer</span>
+	<span class="nocode">-- syntax should support receiving an <a href="#id_AS-Config">AS-Config</a> not including this extension addition group</span>
+	<span class="nocode">-- e.g. from a legacy source eNB</span>
+	]],
+	[[	sourceSCellConfigList-r10			SCellToAddModList-r10			OPTIONAL
+	]],
+	[[	sourceConfigSCG-r12					<a href="#id_SCG-Config-r12">SCG-Config-r12</a>		OPTIONAL
+	]],
+	[[	as-ConfigNR-r15						<a href="#id_AS-ConfigNR-r15">AS-ConfigNR-r15</a>					OPTIONAL
+	]],
+	[[	as-Config-v1550						<a href="#id_AS-Config-v1550">AS-Config-v1550</a>					OPTIONAL
+	]],
+	[[	as-ConfigNR-v1570					<a href="#id_AS-ConfigNR-v1570">AS-ConfigNR-v1570</a>				OPTIONAL
+	]]
+}
+
+<span id="id_AS-Config-v9e0">AS-Config-v9e0</span> ::=				SEQUENCE {
+	sourceDl-CarrierFreq-v9e0		ARFCN-ValueEUTRA-v9e0
+}
+
+<span id="id_AS-Config-v10j0">AS-Config-v10j0</span> ::=				SEQUENCE {
+	antennaInfoDedicatedPCell-v10i0		AntennaInfoDedicated-v10i0			OPTIONAL
+}
+
+<span id="id_AS-Config-v1250">AS-Config-v1250</span> ::=				SEQUENCE {
+	sourceWlan-OffloadConfig-r12		WLAN-OffloadConfig-r12				OPTIONAL,
+	sourceSL-CommConfig-r12				SL-CommConfig-r12					OPTIONAL,
+	sourceSL-DiscConfig-r12				SL-DiscConfig-r12					OPTIONAL
+}
+
+<span id="id_AS-Config-v1320">AS-Config-v1320</span> ::=				SEQUENCE {
+	sourceSCellConfigList-r13			SCellToAddModListExt-r13			OPTIONAL,
+	sourceRCLWI-Configuration-r13		RCLWI-Configuration-r13				OPTIONAL
+}
+
+<span id="id_AS-Config-v13c0">AS-Config-v13c0</span> ::=				SEQUENCE {
+	radioResourceConfigDedicated-v13c01	RadioResourceConfigDedicated-v1370	OPTIONAL,
+	radioResourceConfigDedicated-v13c02	RadioResourceConfigDedicated-v13c0	OPTIONAL,
+	sCellToAddModList-v13c0				SCellToAddModList-v13c0				OPTIONAL,
+	sCellToAddModListExt-v13c0			SCellToAddModListExt-v13c0			OPTIONAL
+}
+
+<span id="id_AS-Config-v1430">AS-Config-v1430</span> ::=				SEQUENCE {
+	sourceSL-V2X-CommConfig-r14			SL-V2X-ConfigDedicated-r14					OPTIONAL,
+	sourceLWA-Config-r14				LWA-Config-r13						OPTIONAL,
+	sourceWLAN-MeasResult-r14			MeasResultListWLAN-r13				OPTIONAL
+}
+
+<span id="id_AS-ConfigNR-r15">AS-ConfigNR-r15</span> ::=				SEQUENCE {
+	sourceRB-ConfigNR-r15				OCTET STRING			OPTIONAL,
+	sourceRB-ConfigSN-NR-r15				OCTET STRING			OPTIONAL,
+	sourceOtherConfigSN-NR-r15			OCTET STRING			OPTIONAL
+}
+
+<span id="id_AS-ConfigNR-v1570">AS-ConfigNR-v1570</span> ::=				SEQUENCE {
+	sourceSCG-ConfiguredNR-r15			ENUMERATED {true}
+}
+
+<span id="id_AS-Config-v1550">AS-Config-v1550</span> ::=			SEQUENCE {
+	tdm-PatternConfig-r15		SEQUENCE {
+		subframeAssignment-r15		SubframeAssignment-r15,
+		harq-Offset-r15				INTEGER (0.. 9)
+	}												OPTIONAL,
+	p-MaxEUTRA-r15				P-Max		OPTIONAL
+}
+
+
+<span id="id_AS-Context">AS-Context</span> ::=							SEQUENCE {
+	reestablishmentInfo						<a href="#id_ReestablishmentInfo">ReestablishmentInfo</a>			OPTIONAL	<span class="nocode">-- Cond HO</span>
+}
+
+<span id="id_AS-Context-v1130">AS-Context-v1130</span> ::=					SEQUENCE {
+	idc-Indication-r11						OCTET STRING (CONTAINING
+											InDeviceCoexIndication-r11)	OPTIONAL,	<span class="nocode">-- Cond HO2</span>
+	mbmsInterestIndication-r11				OCTET STRING (CONTAINING
+											MBMSInterestIndication-r11)	OPTIONAL,	<span class="nocode">-- Cond HO2</span>
+	powerPrefIndication-r11					OCTET STRING (CONTAINING
+											UEAssistanceInformation-r11)	OPTIONAL,	<span class="nocode">-- Cond HO2</span>
+	...,
+	[[	sidelinkUEInformation-r12				OCTET STRING (CONTAINING
+												SidelinkUEInformation-r12)	OPTIONAL	<span class="nocode">-- Cond HO2</span>
+	]],
+	[[	sourceContextEN-DC-r15				OCTET STRING					OPTIONAL	<span class="nocode">-- Cond HO2</span>
+	]],
+	[[	selectedbandCombinationInfoEN-DC-v1540		OCTET STRING			OPTIONAL	<span class="nocode">-- Cond HO2</span>
+	]]
+}
+
+<span id="id_AS-Context-v1320">AS-Context-v1320</span> ::=					SEQUENCE {
+	wlanConnectionStatusReport-r13			OCTET STRING (CONTAINING
+											WLANConnectionStatusReport-r13)	OPTIONAL	<span class="nocode">-- Cond HO2</span>
+}
+
+<span id="id_AS-Context-v1610">AS-Context-v1610</span> ::=					SEQUENCE {
+	sidelinkUEInformationNR-r16				OCTET STRING	OPTIONAL, <span class="nocode">-- Cond HO3</span>
+	ueAssistanceInformationNR-r16				OCTET STRING	OPTIONAL, <span class="nocode">-- Cond HO3</span>
+	configRestrictInfoDAPS-r16				<a href="#id_ConfigRestrictInfoDAPS-r16">ConfigRestrictInfoDAPS-r16</a>		OPTIONAL <span class="nocode">-- Cond HO2</span>
+}
+
+<span id="id_ConfigRestrictInfoDAPS-r16">ConfigRestrictInfoDAPS-r16</span> ::=		SEQUENCE {
+	maxSCH-TB-BitsDL-r16					INTEGER (1..100)			OPTIONAL,	<span class="nocode">-- Cond HO2</span>
+	maxSCH-TB-BitsUL-r16					INTEGER (1..100)			OPTIONAL	<span class="nocode">-- Cond HO2</span>
+}
+
+
+<span id="id_ReestablishmentInfo">ReestablishmentInfo</span> ::=				SEQUENCE {
+	sourcePhysCellId					PhysCellId,
+	targetCellShortMAC-I				ShortMAC-I,
+	additionalReestabInfoList			<a href="#id_AdditionalReestabInfoList">AdditionalReestabInfoList</a>				OPTIONAL,
+	...
+}
+
+<span id="id_AdditionalReestabInfoList">AdditionalReestabInfoList</span> ::=		SEQUENCE ( SIZE (1..maxReestabInfo) ) OF <a href="#id_AdditionalReestabInfo">AdditionalReestabInfo</a>
+
+<span id="id_AdditionalReestabInfo">AdditionalReestabInfo</span> ::=	SEQUENCE{
+	cellIdentity						CellIdentity,
+	key-eNodeB-Star					<a href="#id_Key-eNodeB-Star">Key-eNodeB-Star</a>,
+	shortMAC-I							ShortMAC-I
+}
+
+<span id="id_Key-eNodeB-Star">Key-eNodeB-Star</span> ::=					BIT STRING (SIZE (256))
+
+
+<span id="id_RRM-Config">RRM-Config</span> ::=				SEQUENCE {
+	ue-InactiveTime				ENUMERATED {
+									s1, s2, s3, s5, s7, s10, s15, s20,
+									s25, s30, s40, s50, min1, min1s20c, min1s40,
+									min2, min2s30, min3, min3s30, min4, min5, min6,
+									min7, min8, min9, min10, min12, min14, min17, min20,
+									min24, min28, min33, min38, min44, min50, hr1,
+									hr1min30, hr2, hr2min30, hr3, hr3min30, hr4, hr5, hr6,
+									hr8, hr10, hr13, hr16, hr20, day1, day1hr12, day2,
+									day2hr12, day3, day4, day5, day7, day10, day14, day19,
+									day24, day30, dayMoreThan30}		OPTIONAL,
+	...,
+	[[	candidateCellInfoList-r10	<a href="#id_CandidateCellInfoList-r10">CandidateCellInfoList-r10</a>		OPTIONAL
+	]],
+	[[	candidateCellInfoListNR-r15	MeasResultServFreqListNR-r15		OPTIONAL
+	]]
+}
+
+<span id="id_CandidateCellInfoList-r10">CandidateCellInfoList-r10</span> ::=	SEQUENCE (SIZE (1..maxFreq)) OF <a href="#id_CandidateCellInfo-r10">CandidateCellInfo-r10</a>
+
+<span id="id_CandidateCellInfo-r10">CandidateCellInfo-r10</span> ::=		SEQUENCE {
+	<span class="nocode">-- cellIdentification</span>
+	physCellId-r10					PhysCellId,
+	dl-CarrierFreq-r10				ARFCN-ValueEUTRA,
+	<span class="nocode">-- available measurement results</span>
+	rsrpResult-r10					RSRP-Range			OPTIONAL,
+	rsrqResult-r10					RSRQ-Range			OPTIONAL,
+	...,
+	[[	dl-CarrierFreq-v1090			ARFCN-ValueEUTRA-v9e0		OPTIONAL
+	]],
+	[[	rsrqResult-v1250				RSRQ-Range-v1250			OPTIONAL
+	]],
+	[[	rs-sinr-Result-r13				RS-SINR-Range-r13			OPTIONAL
+	]]
+}
+
+
+<span id="id_maxReestabInfo">maxReestabInfo</span>				INTEGER ::= 32	<span class="nocode">-- Maximum number of KeNB* and shortMAC-I forwarded</span>
+											<span class="nocode">-- at handover for re-establishment preparation</span>
+
+
+END
+</pre>

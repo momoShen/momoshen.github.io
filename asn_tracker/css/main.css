@@ -1,0 +1,9 @@
+body {
+    white-space : nowrap;
+}
+
+iframe {
+    width : 50%;
+    height : 100%;
+    border : none;
+}
