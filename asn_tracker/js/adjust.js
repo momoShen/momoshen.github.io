@@ -27,4 +27,8 @@ window.onload = function() {
     console.log(seleciton);
     fill_asn_items(seleciton);
 
+    document.querySelector("#slave").contentWindow.onhashchange = function(){
+        window.scrollTo(0, 0); 
+    }
+
 };

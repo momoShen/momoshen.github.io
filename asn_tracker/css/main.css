@@ -2,8 +2,12 @@ body {
     white-space : nowrap;
 }
 
+.content {
+    height : 110vh;
+}
+
 iframe {
     width : 50%;
     height : 100%;
-    border : none;
+    border-style : solid;
 }
