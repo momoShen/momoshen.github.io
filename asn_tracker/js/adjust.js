@@ -1,4 +1,4 @@
-function link_slave(obj)
+function master_onload(obj)
 {
     let doc = obj.contentDocument;
     console.log(doc);
@@ -13,12 +13,21 @@ function link_slave(obj)
     //console.log(obj);
 }
 
+function slave_onload(obj)
+{
+    console.log("slave_onload");
+    obj.contentWindow.onhashchange = function(){
+        window.scrollTo(0, 0); 
+    }
+}
+
 function change_asn()
 {
     var master = document.getElementById("master");
     var slave = document.getElementById("slave");
     master.src = "html/"+this.text+".html";
     slave.src = "html/"+this.text+".html";
+
 }
 
 window.onload = function() {
